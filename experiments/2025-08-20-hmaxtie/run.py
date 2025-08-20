@@ -36,7 +36,7 @@ ENVIRONMENT = BaselSlurmEnvironment(
 
 if common_setup.is_test_run():
     SUITE = IssueExperiment.DEFAULT_TEST_SUITE
-    ENVIRONMENT = LocalEnvironment(processes=4)
+    ENVIRONMENT = LocalEnvironment(processes=8)
 
 exp = IssueExperiment(
     REPO_DIR,
