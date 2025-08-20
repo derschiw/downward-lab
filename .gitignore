@@ -1,7 +1,6 @@
 # Experimental data, cache and builds
 experiments/*/__pycache__
 experiments/*/data
-experiments/*/common_setup.py
 experiments/*/archive.py
 
 
