@@ -172,6 +172,22 @@ class IssueExperiment(FastDownwardExperiment):
     """Subclass of FastDownwardExperiment with some convenience features."""
 
     DEFAULT_TEST_SUITE = ["depot:p01.pddl", "gripper:prob01.pddl"]
+    
+    DEFAULT_TEST_SUITE_EXTENDED = [
+        "depot:p01.pddl", 
+        "gripper:prob01.pddl", 
+        "blocks:probBLOCKS-4-0.pddl",
+        #"blocks:probBLOCKS-14-1.pddl",
+        "transport-opt08-strips:p01.pddl",
+        "zenotravel:p01.pddl",
+        "satellite:p01-pfile1.pddl",
+        "scanalyzer-08-strips:p01.pddl",
+        "elevators-opt08-strips:p01.pddl",
+        "storage:p01.pddl",
+        "spider-opt18-strips:p01.pddl",
+        "sokoban-opt08-strips:p01.pddl",
+        "woodworking-opt08-strips:p01.pddl"
+    ]
 
     DEFAULT_TABLE_ATTRIBUTES = [
         "cost",

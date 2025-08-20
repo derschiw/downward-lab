@@ -38,7 +38,7 @@ ENVIRONMENT = BaselSlurmEnvironment(
 )
 
 if common_setup.is_test_run():
-    SUITE = IssueExperiment.DEFAULT_TEST_SUITE
+    SUITE = IssueExperiment.DEFAULT_TEST_SUITE_EXTENDED
     ENVIRONMENT = LocalEnvironment(processes=4)
 
 exp = IssueExperiment(
