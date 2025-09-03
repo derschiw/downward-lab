@@ -10,7 +10,8 @@ from common_setup import IssueConfig, IssueExperiment
 
 
 # ARCHIVE_PATH = "ai/downward/issue1186"
-REPO_DIR = Path("/home/aeneas/Git/downward-projects/downward").expanduser()
+REPO_DIR_LOCAL = Path("/home/aeneas/Git/downward-projects/downward").expanduser()
+REPO_DIR_REMOTE = Path("/infai/meiaen00/downward").expanduser()
 BENCHMARKS_DIR = os.environ["DOWNWARD_BENCHMARKS"]
 BUILDS = ["release"] # "release" or "debug"
 # REVISIONS = ["main", "tiebreaking-num-ops"]
@@ -29,6 +30,7 @@ CONFIGS = [
 ]
 
 SUITE = common_setup.DEFAULT_OPTIMAL_SUITE
+REPO_DIR = REPO_DIR_REMOTE
 
 ENVIRONMENT = BaselSlurmEnvironment(
     partition="infai_2",
@@ -40,6 +42,7 @@ ENVIRONMENT = BaselSlurmEnvironment(
 if common_setup.is_test_run():
     SUITE = IssueExperiment.DEFAULT_TEST_SUITE_EXTENDED
     ENVIRONMENT = LocalEnvironment(processes=4)
+    REPO_DIR = REPO_DIR_LOCAL
 
 exp = IssueExperiment(
     REPO_DIR,
