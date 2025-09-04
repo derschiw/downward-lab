@@ -33,7 +33,7 @@ ENVIRONMENT = BaselSlurmEnvironment(
     partition="infai_2",
     email="aeneas.meier@stud.unibas.ch",
     memory_per_cpu="3947M",
-    time_limit_per_task="5m",
+    time_limit_per_task="00:05:00",
     export=["PATH"],
 )
 
