@@ -15,7 +15,6 @@ BENCHMARKS_DIR = os.environ["DOWNWARD_BENCHMARKS"]
 BUILDS = ["release"]
 REVISIONS = ["main", "OFFICIAL"]
 CONFIG_NICKS = [
-    ("with-pcfstrategy-keyword", ["--search", "astar(lmcut(pcfstrategy=hmax))"]),
     ("without-pcfstrategy-keyword", ["--search", "astar(lmcut())"]),
 ]
 CONFIGS = [
