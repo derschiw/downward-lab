@@ -6,3 +6,5 @@ experiments/*/archive.py
 
 # Virtual environment
 .venv
+
+.DS_Store
