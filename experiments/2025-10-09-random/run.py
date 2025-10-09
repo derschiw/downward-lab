@@ -15,9 +15,9 @@ BENCHMARKS_DIR = os.environ["DOWNWARD_BENCHMARKS"]
 BUILDS = ["release"]
 REVISIONS = ["main"]
 CONFIG_NICKS = [
-    ("astar-hmax", ["--search", "astar(lmcut(pcfstrategy=hmax))"]),
-    ("astar-hadd", ["--search", "astar(lmcut(pcfstrategy=hadd))"]),
     ("astar-random", ["--search", "astar(lmcut(pcfstrategy=random,seed=42))"]),
+    ("astar-random", ["--search", "astar(lmcut(pcfstrategy=random,seed=12))"]),
+    ("astar-random", ["--search", "astar(lmcut(pcfstrategy=random,seed=7))"]),
 ]
 CONFIGS = [
     IssueConfig(
