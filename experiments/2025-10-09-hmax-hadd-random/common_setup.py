@@ -18,6 +18,7 @@ from downward.reports.scatter import ScatterPlotReport
 
 # import archive
 
+
 def parse_args():
     ARGPARSER.add_argument(
         "--test",
@@ -25,73 +26,171 @@ def parse_args():
         default="auto",
         dest="test_run",
         help="test experiment locally on a small suite if --test=yes or "
-             "--test=auto and we are not on a cluster")
+        "--test=auto and we are not on a cluster",
+    )
     return ARGPARSER.parse_args()
+
 
 ARGS = parse_args()
 
 
 DEFAULT_OPTIMAL_SUITE = [
-    'agricola-opt18-strips', 'airport', 'barman-opt11-strips',
-    'barman-opt14-strips', 'blocks', 'childsnack-opt14-strips',
-    'data-network-opt18-strips', 'depot', 'driverlog',
-    'elevators-opt08-strips', 'elevators-opt11-strips',
-    'floortile-opt11-strips', 'floortile-opt14-strips', 'freecell',
-    'ged-opt14-strips', 'grid', 'gripper', 'hiking-opt14-strips',
-    'logistics00', 'logistics98', 'miconic', 'movie', 'mprime',
-    'mystery', 'nomystery-opt11-strips', 'openstacks-opt08-strips',
-    'openstacks-opt11-strips', 'openstacks-opt14-strips',
-    'openstacks-strips', 'organic-synthesis-opt18-strips',
-    'organic-synthesis-split-opt18-strips', 'parcprinter-08-strips',
-    'parcprinter-opt11-strips', 'parking-opt11-strips',
-    'parking-opt14-strips', 'pathways', 'pegsol-08-strips',
-    'pegsol-opt11-strips', 'petri-net-alignment-opt18-strips',
-    'pipesworld-notankage', 'pipesworld-tankage', 'psr-small',
-    'quantum-layout-opt23-strips', 'rovers', 'satellite',
-    'scanalyzer-08-strips', 'scanalyzer-opt11-strips',
-    'snake-opt18-strips', 'sokoban-opt08-strips',
-    'sokoban-opt11-strips', 'spider-opt18-strips', 'storage',
-    'termes-opt18-strips', 'tetris-opt14-strips',
-    'tidybot-opt11-strips', 'tidybot-opt14-strips', 'tpp',
-    'transport-opt08-strips', 'transport-opt11-strips',
-    'transport-opt14-strips', 'trucks-strips', 'visitall-opt11-strips',
-    'visitall-opt14-strips', 'woodworking-opt08-strips',
-    'woodworking-opt11-strips', 'zenotravel']
+    "agricola-opt18-strips",
+    "airport",
+    "barman-opt11-strips",
+    "barman-opt14-strips",
+    "blocks",
+    "childsnack-opt14-strips",
+    "data-network-opt18-strips",
+    "depot",
+    "driverlog",
+    "elevators-opt08-strips",
+    "elevators-opt11-strips",
+    "floortile-opt11-strips",
+    "floortile-opt14-strips",
+    "freecell",
+    "ged-opt14-strips",
+    "grid",
+    "gripper",
+    "hiking-opt14-strips",
+    "logistics00",
+    "logistics98",
+    "miconic",
+    "movie",
+    "mprime",
+    "mystery",
+    "nomystery-opt11-strips",
+    "openstacks-opt08-strips",
+    "openstacks-opt11-strips",
+    "openstacks-opt14-strips",
+    "openstacks-strips",
+    "organic-synthesis-opt18-strips",
+    "organic-synthesis-split-opt18-strips",
+    "parcprinter-08-strips",
+    "parcprinter-opt11-strips",
+    "parking-opt11-strips",
+    "parking-opt14-strips",
+    "pathways",
+    "pegsol-08-strips",
+    "pegsol-opt11-strips",
+    "petri-net-alignment-opt18-strips",
+    "pipesworld-notankage",
+    "pipesworld-tankage",
+    "psr-small",
+    "quantum-layout-opt23-strips",
+    "rovers",
+    "satellite",
+    "scanalyzer-08-strips",
+    "scanalyzer-opt11-strips",
+    "snake-opt18-strips",
+    "sokoban-opt08-strips",
+    "sokoban-opt11-strips",
+    "spider-opt18-strips",
+    "storage",
+    "termes-opt18-strips",
+    "tetris-opt14-strips",
+    "tidybot-opt11-strips",
+    "tidybot-opt14-strips",
+    "tpp",
+    "transport-opt08-strips",
+    "transport-opt11-strips",
+    "transport-opt14-strips",
+    "trucks-strips",
+    "visitall-opt11-strips",
+    "visitall-opt14-strips",
+    "woodworking-opt08-strips",
+    "woodworking-opt11-strips",
+    "zenotravel",
+]
 
 DEFAULT_SATISFICING_SUITE = [
-    'agricola-sat18-strips', 'airport', 'assembly',
-    'barman-sat11-strips', 'barman-sat14-strips', 'blocks',
-    'caldera-sat18-adl', 'caldera-split-sat18-adl', 'cavediving-14-adl',
-    'childsnack-sat14-strips', 'citycar-sat14-adl',
-    'data-network-sat18-strips', 'depot', 'driverlog',
-    'elevators-sat08-strips', 'elevators-sat11-strips',
-    'flashfill-sat18-adl', 'floortile-sat11-strips',
-    'floortile-sat14-strips', 'folding-sat23-adl', 'freecell',
-    'ged-sat14-strips', 'grid', 'gripper', 'hiking-sat14-strips',
-    'labyrinth-sat23-adl', 'logistics00', 'logistics98',
-    'maintenance-sat14-adl', 'miconic', 'miconic-fulladl',
-    'miconic-simpleadl', 'movie', 'mprime', 'mystery',
-    'nomystery-sat11-strips', 'nurikabe-sat18-adl', 'openstacks',
-    'openstacks-sat08-adl', 'openstacks-sat08-strips',
-    'openstacks-sat11-strips', 'openstacks-sat14-strips',
-    'openstacks-strips', 'organic-synthesis-sat18-strips',
-    'organic-synthesis-split-sat18-strips', 'parcprinter-08-strips',
-    'parcprinter-sat11-strips', 'parking-sat11-strips',
-    'parking-sat14-strips', 'pathways', 'pegsol-08-strips',
-    'pegsol-sat11-strips', 'pipesworld-notankage', 'pipesworld-tankage',
-    'psr-small', 'quantum-layout-sat23-strips',
-    'recharging-robots-sat23-adl', 'ricochet-robots-sat23-adl',
-    'rovers', 'rubiks-cube-sat23-adl', 'satellite',
-    'scanalyzer-08-strips', 'scanalyzer-sat11-strips', 'schedule',
-    'settlers-sat18-adl', 'slitherlink-sat23-adl', 'snake-sat18-strips',
-    'sokoban-sat08-strips', 'sokoban-sat11-strips',
-    'spider-sat18-strips', 'storage', 'termes-sat18-strips',
-    'tetris-sat14-strips', 'thoughtful-sat14-strips',
-    'tidybot-sat11-strips', 'tpp', 'transport-sat08-strips',
-    'transport-sat11-strips', 'transport-sat14-strips', 'trucks',
-    'trucks-strips', 'visitall-sat11-strips', 'visitall-sat14-strips',
-    'woodworking-sat08-strips', 'woodworking-sat11-strips',
-    'zenotravel']
+    "agricola-sat18-strips",
+    "airport",
+    "assembly",
+    "barman-sat11-strips",
+    "barman-sat14-strips",
+    "blocks",
+    "caldera-sat18-adl",
+    "caldera-split-sat18-adl",
+    "cavediving-14-adl",
+    "childsnack-sat14-strips",
+    "citycar-sat14-adl",
+    "data-network-sat18-strips",
+    "depot",
+    "driverlog",
+    "elevators-sat08-strips",
+    "elevators-sat11-strips",
+    "flashfill-sat18-adl",
+    "floortile-sat11-strips",
+    "floortile-sat14-strips",
+    "folding-sat23-adl",
+    "freecell",
+    "ged-sat14-strips",
+    "grid",
+    "gripper",
+    "hiking-sat14-strips",
+    "labyrinth-sat23-adl",
+    "logistics00",
+    "logistics98",
+    "maintenance-sat14-adl",
+    "miconic",
+    "miconic-fulladl",
+    "miconic-simpleadl",
+    "movie",
+    "mprime",
+    "mystery",
+    "nomystery-sat11-strips",
+    "nurikabe-sat18-adl",
+    "openstacks",
+    "openstacks-sat08-adl",
+    "openstacks-sat08-strips",
+    "openstacks-sat11-strips",
+    "openstacks-sat14-strips",
+    "openstacks-strips",
+    "organic-synthesis-sat18-strips",
+    "organic-synthesis-split-sat18-strips",
+    "parcprinter-08-strips",
+    "parcprinter-sat11-strips",
+    "parking-sat11-strips",
+    "parking-sat14-strips",
+    "pathways",
+    "pegsol-08-strips",
+    "pegsol-sat11-strips",
+    "pipesworld-notankage",
+    "pipesworld-tankage",
+    "psr-small",
+    "quantum-layout-sat23-strips",
+    "recharging-robots-sat23-adl",
+    "ricochet-robots-sat23-adl",
+    "rovers",
+    "rubiks-cube-sat23-adl",
+    "satellite",
+    "scanalyzer-08-strips",
+    "scanalyzer-sat11-strips",
+    "schedule",
+    "settlers-sat18-adl",
+    "slitherlink-sat23-adl",
+    "snake-sat18-strips",
+    "sokoban-sat08-strips",
+    "sokoban-sat11-strips",
+    "spider-sat18-strips",
+    "storage",
+    "termes-sat18-strips",
+    "tetris-sat14-strips",
+    "thoughtful-sat14-strips",
+    "tidybot-sat11-strips",
+    "tpp",
+    "transport-sat08-strips",
+    "transport-sat11-strips",
+    "transport-sat14-strips",
+    "trucks",
+    "trucks-strips",
+    "visitall-sat11-strips",
+    "visitall-sat14-strips",
+    "woodworking-sat08-strips",
+    "woodworking-sat11-strips",
+    "zenotravel",
+]
 
 
 def get_script():
@@ -146,7 +245,8 @@ def is_running_on_cluster():
 
 def is_test_run():
     return ARGS.test_run == "yes" or (
-        ARGS.test_run == "auto" and not is_running_on_cluster())
+        ARGS.test_run == "auto" and not is_running_on_cluster()
+    )
 
 
 def get_algo_nick(revision, config_nick):
@@ -160,8 +260,10 @@ class IssueConfig(object):
     constructor's options.
 
     """
-    def __init__(self, nick, component_options,
-                 build_options=None, driver_options=None):
+
+    def __init__(
+        self, nick, component_options, build_options=None, driver_options=None
+    ):
         self.nick = nick
         self.component_options = component_options
         self.build_options = build_options
@@ -172,34 +274,34 @@ class IssueExperiment(FastDownwardExperiment):
     """Subclass of FastDownwardExperiment with some convenience features."""
 
     DEFAULT_TEST_SUITE = [
-        "depot:p01.pddl", 
-        "gripper:prob01.pddl", 
-        "gripper:prob02.pddl", 
-        #"gripper:prob03.pddl", 
-        #"gripper:prob04.pddl", 
+        "depot:p01.pddl",
+        "gripper:prob01.pddl",
+        "gripper:prob02.pddl",
+        # "gripper:prob03.pddl",
+        # "gripper:prob04.pddl",
         "blocks:probBLOCKS-4-0.pddl",
         "blocks:probBLOCKS-6-0.pddl",
-        #"blocks:probBLOCKS-8-0.pddl",
-        #"blocks:probBLOCKS-14-1.pddl",
+        # "blocks:probBLOCKS-8-0.pddl",
+        # "blocks:probBLOCKS-14-1.pddl",
         "transport-opt08-strips:p01.pddl",
         "transport-opt08-strips:p02.pddl",
-        #"transport-opt08-strips:p03.pddl",
+        # "transport-opt08-strips:p03.pddl",
         "zenotravel:p01.pddl",
         "zenotravel:p02.pddl",
-        #"zenotravel:p03.pddl",
-        #"zenotravel:p04.pddl",
+        # "zenotravel:p03.pddl",
+        # "zenotravel:p04.pddl",
         "satellite:p01-pfile1.pddl",
         "scanalyzer-08-strips:p01.pddl",
-        #"elevators-opt08-strips:p03.pddl",
-        #"elevators-opt08-strips:p04.pddl",
+        # "elevators-opt08-strips:p03.pddl",
+        # "elevators-opt08-strips:p04.pddl",
         "storage:p01.pddl",
         "storage:p02.pddl",
-        #"storage:p03.pddl",
-        #"storage:p04.pddl",
-        #"spider-opt18-strips:p03.pddl",
-        #"spider-opt18-strips:p04.pddl",
+        # "storage:p03.pddl",
+        # "storage:p04.pddl",
+        # "spider-opt18-strips:p03.pddl",
+        # "spider-opt18-strips:p04.pddl",
         "sokoban-opt08-strips:p01.pddl",
-        "woodworking-opt08-strips:p01.pddl"
+        "woodworking-opt08-strips:p01.pddl",
     ]
 
     DEFAULT_TABLE_ATTRIBUTES = [
@@ -224,7 +326,7 @@ class IssueExperiment(FastDownwardExperiment):
         "score_total_time",
         "search_time",
         "total_time",
-        ]
+    ]
 
     DEFAULT_SCATTER_PLOT_ATTRIBUTES = [
         "evaluations",
@@ -234,7 +336,7 @@ class IssueExperiment(FastDownwardExperiment):
         "memory",
         "search_time",
         "total_time",
-        ]
+    ]
 
     PORTFOLIO_ATTRIBUTES = [
         "cost",
@@ -242,9 +344,11 @@ class IssueExperiment(FastDownwardExperiment):
         "error",
         "plan_length",
         "run_dir",
-        ]
+    ]
 
-    def __init__(self, repo_path=None, revisions=None, configs=None, path=None, **kwargs):
+    def __init__(
+        self, repo_path=None, revisions=None, configs=None, path=None, **kwargs
+    ):
         """
 
         You can either specify both *revisions* and *configs* or none
@@ -288,7 +392,8 @@ class IssueExperiment(FastDownwardExperiment):
 
         if (revisions and not configs) or (not revisions and configs):
             raise ValueError(
-                "please provide either both or none of revisions and configs")
+                "please provide either both or none of revisions and configs"
+            )
 
         if all(isinstance(rev, tuple) for rev in revisions):
             pass
@@ -303,7 +408,8 @@ class IssueExperiment(FastDownwardExperiment):
                     rev,
                     config.component_options,
                     build_options=config.build_options,
-                    driver_options=config.driver_options)
+                    driver_options=config.driver_options,
+                )
 
         self._revisions = [rev[0] for rev in revisions]
         self._configs = configs
@@ -315,8 +421,7 @@ class IssueExperiment(FastDownwardExperiment):
     @classmethod
     def get_supported_attributes(cls, config_nick, attributes):
         if cls._is_portfolio(config_nick):
-            return [attr for attr in attributes
-                    if attr in cls.PORTFOLIO_ATTRIBUTES]
+            return [attr for attr in attributes if attr in cls.PORTFOLIO_ATTRIBUTES]
         return attributes
 
     def add_absolute_report_step(self, **kwargs):
@@ -337,8 +442,8 @@ class IssueExperiment(FastDownwardExperiment):
         kwargs.setdefault("attributes", self.DEFAULT_TABLE_ATTRIBUTES)
         report = AbsoluteReport(**kwargs)
         outfile = os.path.join(
-            self.eval_dir,
-            get_experiment_name() + "." + report.output_format)
+            self.eval_dir, get_experiment_name() + "." + report.output_format
+        )
         self.add_report(report, outfile=outfile)
 
     def add_comparison_table_step(self, revision_pairs=[], **kwargs):
@@ -359,21 +464,29 @@ class IssueExperiment(FastDownwardExperiment):
         kwargs.setdefault("attributes", self.DEFAULT_TABLE_ATTRIBUTES)
 
         if not revision_pairs:
-            revision_pairs = [(rev1, rev2) for rev1, rev2 in itertools.combinations(self._revisions, 2)]
+            revision_pairs = [
+                (rev1, rev2)
+                for rev1, rev2 in itertools.combinations(self._revisions, 2)
+            ]
+
         def make_comparison_tables():
             for rev1, rev2 in revision_pairs:
                 compared_configs = []
                 for config in self._configs:
                     config_nick = config.nick
                     compared_configs.append(
-                        ("%s-%s" % (rev1, config_nick),
-                         "%s-%s" % (rev2, config_nick),
-                         "Diff (%s)" % config_nick))
+                        (
+                            "%s-%s" % (rev1, config_nick),
+                            "%s-%s" % (rev2, config_nick),
+                            "Diff (%s)" % config_nick,
+                        )
+                    )
                 report = ComparativeReport(compared_configs, **kwargs)
                 outfile = os.path.join(
                     self.eval_dir,
-                    "%s-%s-%s-compare.%s" % (
-                        self.name, rev1, rev2, report.output_format))
+                    "%s-%s-%s-compare.%s"
+                    % (self.name, rev1, rev2, report.output_format),
+                )
                 report(self.eval_dir, outfile)
 
         self.add_step("make-comparison-tables", make_comparison_tables)
@@ -404,28 +517,32 @@ class IssueExperiment(FastDownwardExperiment):
             if config_nick2 is not None:
                 name += "-" + config_nick2
             algo1 = get_algo_nick(rev1, config_nick)
-            algo2 = get_algo_nick(rev2, config_nick if config_nick2 is None else config_nick2)
+            algo2 = get_algo_nick(
+                rev2, config_nick if config_nick2 is None else config_nick2
+            )
             report = ScatterPlotReport(
                 filter_algorithm=[algo1, algo2],
                 attributes=[attribute],
                 relative=relative,
-                get_category=lambda run1, run2: run1["domain"])
-            report(
-                self.eval_dir,
-                os.path.join(scatter_dir, rev1 + "-" + rev2, name))
+                get_category=lambda run1, run2: run1["domain"],
+            )
+            report(self.eval_dir, os.path.join(scatter_dir, rev1 + "-" + rev2, name))
 
         def make_scatter_plots():
             for config in self._configs:
                 for rev1, rev2 in itertools.combinations(self._revisions, 2):
                     for attribute in self.get_supported_attributes(
-                            config.nick, attributes):
+                        config.nick, attributes
+                    ):
                         make_scatter_plot(config.nick, rev1, rev2, attribute)
             for nick1, nick2, rev1, rev2, attribute in additional:
                 make_scatter_plot(nick1, rev1, rev2, attribute, config_nick2=nick2)
 
         self.add_step(step_name, make_scatter_plots)
 
-    def add_config_based_scatter_plot_step(self, relative=False, attributes=None, additional=[]):
+    def add_config_based_scatter_plot_step(
+        self, relative=False, attributes=None, additional=[]
+    ):
         """Add step creating (relative) scatter plots for all revision pairs.
 
         Create a scatter plot for each combination of attribute,
@@ -456,10 +573,9 @@ class IssueExperiment(FastDownwardExperiment):
                 filter_algorithm=[algo1, algo2],
                 attributes=[attribute],
                 relative=relative,
-                get_category=lambda run1, run2: run1["domain"])
-            report(
-                self.eval_dir,
-                os.path.join(scatter_dir, rev1 + "-" + rev2, name))
+                get_category=lambda run1, run2: run1["domain"],
+            )
+            report(self.eval_dir, os.path.join(scatter_dir, rev1 + "-" + rev2, name))
 
         def make_scatter_plots():
             for rev in self._revisions:
@@ -470,10 +586,52 @@ class IssueExperiment(FastDownwardExperiment):
 
         self.add_step(step_name, make_scatter_plots)
 
+    def add_cost_vs_initial_h_value_comparison_table_step(self, relative=False):
+        """Add step that creates comparison tables for initial_h_value and cost between all configurations.
+
+        Creates two tables comparing initial_h_value and cost values across all configuration pairs
+        for each revision.
+        """
+
+        def make_comparison_tables():
+            for rev in self._revisions:
+                # Create algorithm pairs for all configuration combinations
+                algorithm_pairs = []
+                # for config1, config2 in itertools.combinations(self._configs, 2):
+                #     algo1 = get_algo_nick(rev, config1.nick)
+                #     algo2 = get_algo_nick(rev, config2.nick)
+                #     diff_label = f"Diff {config1.nick}-{config2.nick}"
+                #     algorithm_pairs.append((algo1, algo2, diff_label))
+
+                # the upper code is correct, but we only care about hmax vs hadd
+                algorithm_pairs = [
+                    ("main-astar-hmax", "main-astar-hadd", "Diff hmax-hadd")
+                ]
+
+                # Create initial_h_value comparison table
+                h_value_report = ComparativeReport(
+                    algorithm_pairs, attributes=["initial_h_value"]
+                )
+                h_value_outfile = os.path.join(
+                    self.eval_dir,
+                    f"{self.name}-{rev}-initial-h-value-compare.{h_value_report.output_format}",
+                )
+                h_value_report(self.eval_dir, h_value_outfile)
+
+                # Create cost comparison table
+                cost_report = ComparativeReport(algorithm_pairs, attributes=["cost"])
+                cost_outfile = os.path.join(
+                    self.eval_dir,
+                    f"{self.name}-{rev}-cost-compare.{cost_report.output_format}",
+                )
+                cost_report(self.eval_dir, cost_outfile)
+
+        self.add_step(
+            "make-cost-vs-initial-h-comparison-tables", make_comparison_tables
+        )
+
     def add_archive_step(self, archive_path):
         archive.add_archive_step(self, archive_path)
 
     def add_archive_eval_dir_step(self, archive_path):
         archive.add_archive_eval_dir_step(self, archive_path)
-
-

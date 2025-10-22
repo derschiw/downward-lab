@@ -76,5 +76,6 @@ exp.add_comparison_table_step(attributes=ATTRIBUTES)
 exp.add_config_based_scatter_plot_step(
     relative=False, attributes=["search_time", "expansions", "evaluations"]
 )
+exp.add_cost_vs_initial_h_value_comparison_table_step()
 
 exp.run_steps()
