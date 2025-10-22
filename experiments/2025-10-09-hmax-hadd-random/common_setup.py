@@ -621,6 +621,51 @@ class IssueExperiment(FastDownwardExperiment):
                     cols = row.find_all(["td", "th"])
                     csvwriter.writerow([col.get_text(strip=True) for col in cols])
 
+        def extract_all_tables(html_file, csv_file, table_container_id):
+            """
+            Extract all tables that start with the given prefix and save them to CSV.
+            """
+            with open(html_file, "r") as f:
+                html_content = f.read()
+
+            # Find all tables with IDs starting with the given prefix
+            table_pattern = re.compile(
+                rf'<section id="({table_container_id}[^"]*?)">(.+?)</section>',
+                re.DOTALL,
+            )
+            matches = table_pattern.findall(html_content)
+
+            if not matches:
+                print(
+                    f"No tables with id prefix '{table_container_id}' found in {html_file}."
+                )
+                return
+
+            from bs4 import BeautifulSoup
+            import csv
+
+            for table_id, table_html in matches:
+                print(f"Extracting table: {table_id}")
+
+                soup = BeautifulSoup(table_html, "html.parser")
+                table = soup.find("table")
+
+                if table:
+                    # Create a unique CSV filename for each table
+                    table_csv_file = csv_file.replace(".csv", f"-{table_id}.csv")
+
+                    with open(table_csv_file, "w", newline="") as csvfile:
+                        csvwriter = csv.writer(csvfile)
+                        for row in table.find_all("tr"):
+                            cols = row.find_all(["td", "th"])
+                            csvwriter.writerow(
+                                [col.get_text(strip=True) for col in cols]
+                            )
+
+                    print(f"Saved table {table_id} to {table_csv_file}")
+                else:
+                    print(f"No table found in section {table_id}")
+
         def make_comparison_tables():
             for rev in self._revisions:
                 # Create algorithm pairs for all configuration combinations
@@ -655,18 +700,14 @@ class IssueExperiment(FastDownwardExperiment):
                 )
                 cost_report(self.eval_dir, cost_outfile)
 
-                extract_table_from_html_to_csv(
+                csv_dir = os.path.join(self.eval_dir, "csv")
+                os.makedirs(csv_dir, exist_ok=True)
+                csv_filename = os.path.basename(cost_outfile.replace('.html', '.csv'))
+                extract_all_tables(
                     cost_outfile,
-                    cost_outfile.replace(".html", ".csv"),
+                    os.path.join(csv_dir, csv_filename),
                     "cost",
                 )
-                extract_table_from_html_to_csv(
-                    h_value_outfile,
-                    h_value_outfile.replace(".html", ".csv"),
-                    "initial_h_value",
-                )
-
-                #
 
         self.add_step(
             "make-cost-vs-initial-h-comparison-tables", make_comparison_tables
