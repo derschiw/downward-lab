@@ -593,6 +593,34 @@ class IssueExperiment(FastDownwardExperiment):
         for each revision.
         """
 
+        def extract_table_from_html_to_csv(html_file, csv_file, table_container_id):
+            with open(html_file, "r") as f:
+                html_content = f.read()
+
+            # Use regex to extract the desired table
+            table_pattern = re.compile(
+                rf'<section id="{table_container_id}">(.+?)</section>', re.DOTALL
+            )
+            match = table_pattern.search(html_content)
+            if not match:
+                print(f"Table with id '{table_container_id}' not found in {html_file}.")
+                return
+
+            table_html = match.group(1)
+
+            # Convert HTML table to CSV format
+            from bs4 import BeautifulSoup
+            import csv
+
+            soup = BeautifulSoup(table_html, "html.parser")
+            table = soup.find("table")
+
+            with open(csv_file, "w", newline="") as csvfile:
+                csvwriter = csv.writer(csvfile)
+                for row in table.find_all("tr"):
+                    cols = row.find_all(["td", "th"])
+                    csvwriter.writerow([col.get_text(strip=True) for col in cols])
+
         def make_comparison_tables():
             for rev in self._revisions:
                 # Create algorithm pairs for all configuration combinations
@@ -620,11 +648,25 @@ class IssueExperiment(FastDownwardExperiment):
 
                 # Create cost comparison table
                 cost_report = ComparativeReport(algorithm_pairs, attributes=["cost"])
+                print("cost report", cost_report)
                 cost_outfile = os.path.join(
                     self.eval_dir,
                     f"{self.name}-{rev}-cost-compare.{cost_report.output_format}",
                 )
                 cost_report(self.eval_dir, cost_outfile)
+
+                extract_table_from_html_to_csv(
+                    cost_outfile,
+                    cost_outfile.replace(".html", ".csv"),
+                    "cost",
+                )
+                extract_table_from_html_to_csv(
+                    h_value_outfile,
+                    h_value_outfile.replace(".html", ".csv"),
+                    "initial_h_value",
+                )
+
+                #
 
         self.add_step(
             "make-cost-vs-initial-h-comparison-tables", make_comparison_tables
