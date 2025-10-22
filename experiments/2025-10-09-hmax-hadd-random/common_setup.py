@@ -682,14 +682,14 @@ class IssueExperiment(FastDownwardExperiment):
                 ]
 
                 # Create initial_h_value comparison table
-                h_value_report = ComparativeReport(
+                initial_h_value_report = ComparativeReport(
                     algorithm_pairs, attributes=["initial_h_value"]
                 )
-                h_value_outfile = os.path.join(
+                initial_h_value_outfile = os.path.join(
                     self.eval_dir,
-                    f"{self.name}-{rev}-initial-h-value-compare.{h_value_report.output_format}",
+                    f"{self.name}-{rev}-initial-h-value-compare.{initial_h_value_report.output_format}",
                 )
-                h_value_report(self.eval_dir, h_value_outfile)
+                initial_h_value_report(self.eval_dir, initial_h_value_outfile)
 
                 # Create cost comparison table
                 cost_report = ComparativeReport(algorithm_pairs, attributes=["cost"])
@@ -702,11 +702,16 @@ class IssueExperiment(FastDownwardExperiment):
 
                 csv_dir = os.path.join(self.eval_dir, "csv")
                 os.makedirs(csv_dir, exist_ok=True)
-                csv_filename = os.path.basename(cost_outfile.replace('.html', '.csv'))
+                csv_filename = os.path.basename(cost_outfile.replace(".html", ".csv"))
                 extract_all_tables(
                     cost_outfile,
-                    os.path.join(csv_dir, csv_filename),
+                    os.path.join(csv_dir, f"cost_{csv_filename}"),
                     "cost",
+                )
+                extract_all_tables(
+                    initial_h_value_outfile,
+                    os.path.join(csv_dir, f"initial_h_value_{csv_filename}"),
+                    "initial_h_value",
                 )
 
         self.add_step(
