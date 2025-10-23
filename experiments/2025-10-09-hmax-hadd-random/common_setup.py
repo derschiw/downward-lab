@@ -638,6 +638,188 @@ class IssueExperiment(FastDownwardExperiment):
                 else:
                     print(f"No table found in section {table_id}")
 
+        def create_summary_table(input_dir, outfile):
+            """
+            Does the following:
+            - Loop over all CSV starting with 'cost_' in the input_dir
+                - Loop over all rows with values for '.pddl' files (skip header and footer)
+                    - Ignore the line if cost is none
+                    - Extract the corresponding line from the initial_h_value CSV file else
+                - Write a summary CSV with columns: problem, cost_rev1, cost_rev2, cost_diff, initial_h_value_rev1, initial_h_value_rev2, initial_h_value_diff
+            """
+            import csv
+            import os
+            import glob
+
+            # Find all CSV files starting with 'cost_'
+            cost_files = glob.glob(os.path.join(input_dir, "cost_*.csv"))
+
+            if not cost_files:
+                print(f"No cost CSV files found in {input_dir}")
+                return
+
+            summary_data = []
+
+            for cost_file in cost_files:
+                print(f"Processing cost file: {cost_file}")
+
+                # Determine corresponding initial_h_value file
+                cost_basename = os.path.basename(cost_file)
+
+                # Try different naming patterns to find the matching initial_h_value file
+                possible_names = []
+
+                if "-cost-compare-cost-" in cost_basename:
+                    # Pattern: cost_...-cost-compare-cost-domain.csv -> initial_h_value_...-initial-h-value-compare-initial_h_value-domain.csv
+                    possible_names.append(
+                        cost_basename.replace("cost_", "initial_h_value_").replace(
+                            "-cost-compare-cost-",
+                            "-initial-h-value-compare-initial_h_value-",
+                        )
+                    )
+                elif "-cost-compare--" in cost_basename:
+                    # Try multiple patterns for double-dash cost files
+                    # Pattern 1: cost_...-cost-compare--domain.csv -> initial_h_value_...-initial-h-value-compare--domain.csv (same pattern)
+                    possible_names.append(
+                        cost_basename.replace("cost_", "initial_h_value_").replace(
+                            "-cost-compare--", "-initial-h-value-compare--"
+                        )
+                    )
+                    # Pattern 2: cost_...-cost-compare--domain.csv -> initial_h_value_...-initial-h-value-compare-initial_h_value-domain.csv (cross-pattern)
+                    possible_names.append(
+                        cost_basename.replace("cost_", "initial_h_value_").replace(
+                            "-cost-compare--",
+                            "-initial-h-value-compare-initial_h_value-",
+                        )
+                    )
+                else:
+                    # Fallback: simple replacement
+                    possible_names.append(
+                        cost_basename.replace("cost_", "initial_h_value_")
+                    )  # Find the first matching file
+                initial_h_file = None
+                for name in possible_names:
+                    candidate_file = os.path.join(input_dir, name)
+                    if os.path.exists(candidate_file):
+                        initial_h_file = candidate_file
+                        break
+
+                if initial_h_file is None:
+                    # If no direct match found, use the first candidate for error reporting
+                    initial_h_file = os.path.join(input_dir, possible_names[0])
+
+                if not os.path.exists(initial_h_file):
+                    print(
+                        f"Warning: Corresponding initial_h_value file not found: {initial_h_file}"
+                    )
+                    continue
+
+                # Read cost data
+                cost_data = {}
+                with open(cost_file, "r") as f:
+                    reader = csv.reader(f)
+                    rows = list(reader)
+
+                    if len(rows) < 2:
+                        continue
+
+                    # Skip header and footer, process data rows
+                    for i, row in enumerate(rows[1:], 1):  # Skip header
+                        if len(row) < 4:  # Need at least problem, cost1, cost2, diff
+                            continue
+
+                        problem = row[0]
+                        if not problem.endswith(".pddl"):
+                            continue
+
+                        try:
+                            cost1 = row[1] if row[1] and row[1] != "None" else None
+                            cost2 = row[2] if row[2] and row[2] != "None" else None
+                            cost_diff = row[3] if row[3] and row[3] != "None" else None
+
+                            # Skip if both costs are None
+                            if cost1 is None and cost2 is None:
+                                continue
+
+                            cost_data[problem] = {
+                                "cost1": cost1,
+                                "cost2": cost2,
+                                "cost_diff": cost_diff,
+                            }
+                        except (ValueError, IndexError):
+                            continue
+
+                # Read initial_h_value data
+                initial_h_data = {}
+                with open(initial_h_file, "r") as f:
+                    reader = csv.reader(f)
+                    rows = list(reader)
+
+                    if len(rows) < 2:
+                        continue
+
+                    for i, row in enumerate(rows[1:], 1):  # Skip header
+                        if len(row) < 4:
+                            continue
+
+                        problem = row[0]
+                        if not problem.endswith(".pddl"):
+                            continue
+
+                        try:
+                            h1 = row[1] if row[1] and row[1] != "None" else None
+                            h2 = row[2] if row[2] and row[2] != "None" else None
+                            h_diff = row[3] if row[3] and row[3] != "None" else None
+
+                            initial_h_data[problem] = {
+                                "h1": h1,
+                                "h2": h2,
+                                "h_diff": h_diff,
+                            }
+                        except (ValueError, IndexError):
+                            continue
+
+                # Combine data for problems that have cost data
+                for problem in cost_data:
+                    cost_info = cost_data[problem]
+                    h_info = initial_h_data.get(
+                        problem, {"h1": None, "h2": None, "h_diff": None}
+                    )
+
+                    summary_data.append(
+                        {
+                            "problem": problem,
+                            "cost_rev1": cost_info["cost1"],
+                            "cost_rev2": cost_info["cost2"],
+                            "cost_diff": cost_info["cost_diff"],
+                            "initial_h_value_rev1": h_info["h1"],
+                            "initial_h_value_rev2": h_info["h2"],
+                            "initial_h_value_diff": h_info["h_diff"],
+                        }
+                    )
+
+            # Write summary CSV
+            if summary_data:
+                with open(outfile, "w", newline="") as f:
+                    fieldnames = [
+                        "problem",
+                        "cost_rev1",
+                        "cost_rev2",
+                        "cost_diff",
+                        "initial_h_value_rev1",
+                        "initial_h_value_rev2",
+                        "initial_h_value_diff",
+                    ]
+                    writer = csv.DictWriter(f, fieldnames=fieldnames)
+                    writer.writeheader()
+                    writer.writerows(summary_data)
+
+                print(
+                    f"Summary table written to {outfile} with {len(summary_data)} rows"
+                )
+            else:
+                print("No data found to create summary table")
+
         def make_comparison_tables():
             for rev in self._revisions:
                 # Create algorithm pairs for all configuration combinations
@@ -680,11 +862,20 @@ class IssueExperiment(FastDownwardExperiment):
                     os.path.join(csv_dir, f"cost_{csv_filename}"),
                     "cost",
                 )
+
+                csv_filename = os.path.basename(
+                    initial_h_value_outfile.replace(".html", ".csv")
+                )
                 extract_all_tables(
                     initial_h_value_outfile,
                     os.path.join(csv_dir, f"initial_h_value_{csv_filename}"),
                     "initial_h_value",
                 )
+                # Create summary table
+                summary_outfile = os.path.join(
+                    csv_dir, f"summary_{rev}_cost_vs_initial_h.csv"
+                )
+                create_summary_table(csv_dir, summary_outfile)
 
         self.add_step(
             "make-cost-vs-initial-h-comparison-tables", make_comparison_tables
