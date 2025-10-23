@@ -8,3 +8,5 @@ experiments/*/archive.py
 .venv
 
 .DS_Store
+
+__pycache__
