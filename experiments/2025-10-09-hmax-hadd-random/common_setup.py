@@ -15,7 +15,6 @@ from downward.experiment import FastDownwardExperiment
 from downward.reports.absolute import AbsoluteReport
 from downward.reports.compare import ComparativeReport
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 from lib.plots import ScatterPlotReport
 
 
@@ -593,6 +592,9 @@ class IssueExperiment(FastDownwardExperiment):
                 get_category=lambda run1, run2: run1["domain"],
                 matplotlib_options=matplotlib_options,
                 format="png",
+                title="",
+                xlabel=rev1.strip("main-astar-"),
+                ylabel=rev2.strip("main-astar-"),
             )
             report(self.eval_dir, os.path.join(scatter_dir, rev1 + "-" + rev2, name))
 
