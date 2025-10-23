@@ -14,9 +14,10 @@ from lab import tools
 from downward.experiment import FastDownwardExperiment
 from downward.reports.absolute import AbsoluteReport
 from downward.reports.compare import ComparativeReport
-from downward.reports.scatter import ScatterPlotReport
 
-# import archive
+from lib.plots import ScatterPlotReport
+
+import matplotlib
 
 
 def parse_args():
@@ -554,6 +555,23 @@ class IssueExperiment(FastDownwardExperiment):
             exp.add_config_based_scatter_plot_step(attributes=["expansions"])
 
         """
+        matplotlib_options = {
+            "font.family": "serif",
+            "font.weight": "normal",
+            # Used if more specific sizes not set.
+            "font.size": 20,
+            "axes.labelsize": 20,
+            "axes.titlesize": 30,
+            "legend.fontsize": 22,
+            "xtick.labelsize": 10,
+            "ytick.labelsize": 10,
+            "lines.markersize": 20,
+            "lines.markeredgewidth": 0.25,
+            "lines.linewidth": 1,
+            # Width and height in inches.
+            "figure.figsize": [18, 18],
+            "savefig.dpi": 100,
+        }
         if relative:
             scatter_dir = os.path.join(self.eval_dir, "scatter-relative")
             step_name = "make-config-based-relative-scatter-plots"
@@ -574,6 +592,8 @@ class IssueExperiment(FastDownwardExperiment):
                 attributes=[attribute],
                 relative=relative,
                 get_category=lambda run1, run2: run1["domain"],
+                matplotlib_options=matplotlib_options,
+                format="png",
             )
             report(self.eval_dir, os.path.join(scatter_dir, rev1 + "-" + rev2, name))
 
