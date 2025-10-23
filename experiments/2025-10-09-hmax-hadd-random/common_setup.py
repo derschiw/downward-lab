@@ -15,9 +15,8 @@ from downward.experiment import FastDownwardExperiment
 from downward.reports.absolute import AbsoluteReport
 from downward.reports.compare import ComparativeReport
 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 from lib.plots import ScatterPlotReport
-
-import matplotlib
 
 
 def parse_args():
