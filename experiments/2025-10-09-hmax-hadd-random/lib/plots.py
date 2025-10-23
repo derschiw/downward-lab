@@ -340,11 +340,11 @@ class ScatterPlotReport(PlanningReport):
         return category_styles
 
     def _get_axis_label(self, label, algo, num_wins):
-        if label:
-            return label
+        comp = "lower" if self.attribute.min_wins else "higher"
         if self.attribute.min_wins is None:
             return algo
-        comp = "lower" if self.attribute.min_wins else "higher"
+        if label:
+            return f"{label} ({comp} for {num_wins} tasks)"
         return f"{algo} ({comp} for {num_wins} tasks)"
 
     def _write_plot(self, runs, filename):
