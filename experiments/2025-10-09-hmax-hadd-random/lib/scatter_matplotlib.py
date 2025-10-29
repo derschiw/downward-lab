@@ -89,9 +89,13 @@ class ScatterMatplotlib:
         if report.title:
             plot.axes.set_title(report.title, pad=cls.TITLE_PADDING)
         if report.xlabel:
-            plot.axes.set_xlabel(report.xlabel, labelpad=cls.XAXIS_LABEL_PADDING)
+            plot.axes.set_xlabel(
+                report.xlabel, fontsize=40, labelpad=cls.XAXIS_LABEL_PADDING
+            )
         if report.ylabel:
-            plot.axes.set_ylabel(report.ylabel, labelpad=cls.YAXIS_LABEL_PADDING)
+            plot.axes.set_ylabel(
+                report.ylabel, fontsize=40, labelpad=cls.YAXIS_LABEL_PADDING
+            )
 
         plot.axes.set_xscale(report.xscale)
         plot.axes.set_yscale(report.yscale)

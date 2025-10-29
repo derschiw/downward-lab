@@ -557,7 +557,7 @@ class IssueExperiment(FastDownwardExperiment):
             "font.family": "serif",
             "font.weight": "normal",
             # Used if more specific sizes not set.
-            "font.size": 20,
+            "font.size": 80,
             "axes.labelsize": 20,
             "axes.titlesize": 30,
             "legend.fontsize": 22,
@@ -593,8 +593,8 @@ class IssueExperiment(FastDownwardExperiment):
                 matplotlib_options=matplotlib_options,
                 format="png",
                 title="",
-                xlabel=rev1.strip("main-astar-"),
-                ylabel=rev2.strip("main-astar-"),
+                xlabel=rev1.replace("astar-", ""),
+                ylabel=rev2.replace("astar-", ""),
             )
             report(self.eval_dir, os.path.join(scatter_dir, rev1 + "-" + rev2, name))
 
