@@ -9,7 +9,7 @@ import common_setup
 from common_setup import IssueConfig, IssueExperiment
 
 
-REPO_DIR_LOCAL = Path("/home/aeneas/Git/downward-projects/downward").expanduser()
+REPO_DIR_LOCAL = Path("/Users/aeneas/Git/bachelorthesis/downward").expanduser()
 REPO_DIR_REMOTE = Path("/infai/meiaen00/downward").expanduser()
 BENCHMARKS_DIR = os.environ["DOWNWARD_BENCHMARKS"]
 BUILDS = ["release"]

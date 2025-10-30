@@ -9,7 +9,7 @@ import common_setup
 from common_setup import IssueConfig, IssueExperiment
 
 
-REPO_DIR_LOCAL = Path("/home/aeneas/Git/downward-projects/downward").expanduser()
+REPO_DIR_LOCAL = Path("/Users/aeneas/Git/bachelorthesis/downward").expanduser()
 REPO_DIR_REMOTE = Path("/infai/meiaen00/downward").expanduser()
 BENCHMARKS_DIR = os.environ["DOWNWARD_BENCHMARKS"]
 BUILDS = ["release"]
@@ -68,7 +68,7 @@ SCATTER_ATTRIBUTES = SPECIAL_ATTRIBUTES
 
 exp.add_absolute_report_step(attributes=ATTRIBUTES)
 exp.add_comparison_table_step(attributes=ATTRIBUTES)
-exp.add_scatter_plot_step(
+exp.add_config_based_scatter_plot_step(
     relative=False, attributes=["search_time", "expansions", "evaluations"]
 )
 
