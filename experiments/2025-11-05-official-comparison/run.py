@@ -13,7 +13,7 @@ REPO_DIR_LOCAL = Path("/home/aeneas/Git/downward-projects/downward").expanduser(
 REPO_DIR_REMOTE = Path("/infai/meiaen00/downward").expanduser()
 BENCHMARKS_DIR = os.environ["DOWNWARD_BENCHMARKS"]
 BUILDS = ["release"]
-REVISIONS = ["fix-random-implementation", "OFFICIAL"]
+REVISIONS = ["hmax-comparison", "OFFICIAL"]
 CONFIG_NICKS = [
     ("hmax", ["--search", "astar(lmcut())"]),
 ]
