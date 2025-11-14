@@ -23,7 +23,7 @@ CONFIGS = [
         config_nick,
         config,
         build_options=[build],
-        driver_options=["--overall-time-limit", "30m", "--build", build],
+        driver_options=["--overall-time-limit", "5m", "--build", build],
     )
     for build in BUILDS
     for config_nick, config in CONFIG_NICKS
