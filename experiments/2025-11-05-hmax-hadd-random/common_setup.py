@@ -595,6 +595,7 @@ class IssueExperiment(FastDownwardExperiment):
                 title="",
                 xlabel=rev1.replace("astar-", ""),
                 ylabel=rev2.replace("astar-", ""),
+                # ylabel="hadd-hmax-term",
             )
             report(self.eval_dir, os.path.join(scatter_dir, rev1 + "-" + rev2, name))
 
