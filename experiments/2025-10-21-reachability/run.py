@@ -68,7 +68,7 @@ SCATTER_ATTRIBUTES = SPECIAL_ATTRIBUTES
 
 exp.add_absolute_report_step(attributes=ATTRIBUTES)
 exp.add_comparison_table_step(attributes=ATTRIBUTES)
-exp.add_scatter_plot_step(
+exp.add_config_based_scatter_plot_step(
     relative=False, attributes=["search_time", "expansions", "evaluations"]
 )
 
