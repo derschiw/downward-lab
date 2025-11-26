@@ -593,7 +593,7 @@ class IssueExperiment(FastDownwardExperiment):
                 matplotlib_options=matplotlib_options,
                 format="png",
                 title="",
-                xlabel="No Tiebreaking",
+                xlabel="FD Tiebreaking",
                 ylabel="Reachability",
             )
             report(self.eval_dir, os.path.join(scatter_dir, rev1 + "-" + rev2, name))
